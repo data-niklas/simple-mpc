@@ -131,5 +131,16 @@ like volume and seek."
         (concat "+" number-string)
       number-string)))
 
+(defun simple-mpc-listen (events func)
+  "Listen for all EVENTS and call FUNC when an event happens.
+Return the listening process."
+  (let
+      ((process
+        (start-process-shell-command "mpc listen for events" nil
+                                     (concat "mpc idleloop "
+                                             (s-join " " events)))))
+    (set-process-filter process func)
+    process))
+
 (provide 'simple-mpc-utils)
 ;;; simple-mpc-utils.el ends here

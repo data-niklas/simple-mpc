@@ -43,13 +43,19 @@
             (define-key map "d" 'simple-mpc-delete)
             (define-key map "q" 'simple-mpc-current-playlist-quit)
             map)
-  (set (make-local-variable 'revert-buffer-function) #'simple-mpc-view-current-playlist))
+  (set (make-local-variable 'revert-buffer-function) #'simple-mpc-view-current-playlist)
+  (unless simple-mpc-playlist-change-listen-process
+    (setq simple-mpc-playlist-change-listen-process
+       (simple-mpc-listen '("player" "playlist")
+                          (lambda (process output) (simple-mpc-maybe-refresh-playlist t))))))
 
 (defun simple-mpc-current-playlist-quit ()
   "Quit the current playlist mode and go back to the main view."
   (interactive)
   (simple-mpc-playlist-refresh-timer-stop)
   (kill-buffer simple-mpc-current-playlist-buffer-name)
+  (kill-process simple-mpc-playlist-change-listen-process)
+  (setq simple-mpc-playlist-change-listen-process nil)
   (simple-mpc-switch-to-main-buffer))
 
 (defun simple-mpc-view-current-playlist (&optional ignore-auto noconfirm keep-point)

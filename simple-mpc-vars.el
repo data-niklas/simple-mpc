@@ -37,6 +37,9 @@
 (defvar simple-mpc-query-buffer-name "*simple-mpc-query*"
   "Name of the simple-mpc query buffer.")
 
+(defvar simple-mpc-playlist-change-listen-process nil
+  "Process listening for playlist updates.")
+
 (defgroup simple-mpc nil
   "simple-mpc - provides a simple interface to mpc"
   :group 'multimedia)

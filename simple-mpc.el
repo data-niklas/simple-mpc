@@ -58,14 +58,14 @@
 (defun simple-mpc-next ()
   "Play the next song."
   (interactive)
-  (simple-mpc-call-mpc nil "next")
-  (simple-mpc-maybe-refresh-playlist t))
+  (simple-mpc-call-mpc nil "next"))
+  ;; (simple-mpc-maybe-refresh-playlist t))
 
 (defun simple-mpc-prev ()
   "Play the previous song."
   (interactive)
-  (simple-mpc-call-mpc nil "prev")
-  (simple-mpc-maybe-refresh-playlist t))
+  (simple-mpc-call-mpc nil "prev"))
+  ;; (simple-mpc-maybe-refresh-playlist t))
 
 (defun simple-mpc-seek-forward ()
   "Does a relative seek forward by `simple-mpc-seek-time-in-s' seconds."
@@ -102,8 +102,8 @@
   "Clear the current playlist."
   (interactive)
   (simple-mpc-call-mpc nil "clear")
-  (message "%s" "Cleared current playlist.")
-  (simple-mpc-maybe-refresh-playlist))
+  (message "%s" "Cleared current playlist."))
+  ;; (simple-mpc-maybe-refresh-playlist))
 
 (defun simple-mpc-toggle-repeat ()
   "Toggle repeat mode."
@@ -115,8 +115,8 @@
   "Shuffle the current playlist."
   (interactive)
   (simple-mpc-call-mpc nil "shuffle")
-  (message "%s" "Shuffled current playlist.")
-  (simple-mpc-maybe-refresh-playlist))
+  (message "%s" "Shuffled current playlist."))
+  ;; (simple-mpc-maybe-refresh-playlist))
 
 (defun simple-mpc-load-playlist (playlist-name)
   "Load a MPD PLAYLIST-NAME.
@@ -127,8 +127,8 @@ command."
    (list
     (completing-read "Playlist: " (simple-mpc-call-mpc-strings "lsplaylists"))))
   (message "%s %s" "Loading playlist" playlist-name)
-  (simple-mpc-call-mpc nil (list "load" playlist-name))
-  (simple-mpc-maybe-refresh-playlist))
+  (simple-mpc-call-mpc nil (list "load" playlist-name)))
+  ;; (simple-mpc-maybe-refresh-playlist))
 
 ;;;###autoload
 (defun simple-mpc (&optional ignore-auto noconfirm)
