@@ -49,8 +49,9 @@ passed to the mpc program."
 (defun simple-mpc-listen-events (name events on-event-cb)
   "Listen for all EVENTS and call on-event-cb for each event occurence. Return a process called simple-mpc-NAME."
   (let* ((process (eval
-                   (start-process (concat "simple-mpc-" name))
-                   events)))
+                   (append
+                   '(start-process (concat "simple-mpc-" name) nil "mpc" "idleloop")
+                   events))))
     (set-process-filter process on-event-cb)
     process))
 

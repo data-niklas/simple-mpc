@@ -49,7 +49,7 @@
         (list simple-mpc-main-buffer-name
               simple-mpc-current-playlist-buffer-name
               simple-mpc-query-buffer-name))
-  (delete-process simple-mpc-song-change-process))
+  (simple-mpc-stop-song-listener))
 
 (defun simple-mpc-toggle ()
   "Toggle the playing / pause state."
@@ -131,6 +131,22 @@ command."
   (simple-mpc-call-mpc nil (list "load" playlist-name))
   (simple-mpc-maybe-refresh-playlist))
 
+
+(defun simple-mpc-start-song-listener ()
+  "Create a new process waiting for song changes."
+  (if (eq simple-mpc-song-change-process nil)
+      (setq simple-mpc-song-change-process
+            (simple-mpc-listen-events
+             "song change"
+             '("player")
+             (lambda (proc string)
+               (simple-mpc-maybe-refresh-playlist t))))))
+
+(defun simple-mpc-stop-song-listener ()
+  "Stops the process waiting for song changes."
+  (delete-process simple-mpc-song-change-process)
+  (setq simple-mpc-song-change-process nil))
+
 ;;;###autoload
 (defun simple-mpc (&optional ignore-auto noconfirm)
   "Start simple-mpc.
@@ -160,14 +176,9 @@ IGNORE-AUTO and NOCONFIRM are passed by `revert-buffer'."
               "      * [s]earch database\n"
               (propertize "\n   * misc\n" 'face 'simple-mpc-main-headers)
               "      * [q]uit")
-      (if (eq simple-mpc-song-change-process nil)
-          (setq simple-mpc-song-change-process (simple-mpc-listen-events
-                                                "song change"
-                                                '("player")
-                                                (lambda (proc string)
-                                                  (simple-mpc-maybe-refresh-playlist t))))))
       (simple-mpc-mode) ; start major mode
-      (switch-to-buffer buf))))
+      (switch-to-buffer buf)
+      (simple-mpc-start-song-listener))))
 
 (provide 'simple-mpc)
 ;;; simple-mpc.el ends here
