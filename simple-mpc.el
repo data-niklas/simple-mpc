@@ -48,7 +48,8 @@
               (kill-buffer buf)))
         (list simple-mpc-main-buffer-name
               simple-mpc-current-playlist-buffer-name
-              simple-mpc-query-buffer-name)))
+              simple-mpc-query-buffer-name))
+  (delete-process simple-mpc-song-change-process))
 
 (defun simple-mpc-toggle ()
   "Toggle the playing / pause state."
@@ -159,6 +160,12 @@ IGNORE-AUTO and NOCONFIRM are passed by `revert-buffer'."
               "      * [s]earch database\n"
               (propertize "\n   * misc\n" 'face 'simple-mpc-main-headers)
               "      * [q]uit")
+      (if (eq simple-mpc-song-change-process nil)
+          (setq simple-mpc-song-change-process (simple-mpc-listen-events
+                                                "song change"
+                                                '("player")
+                                                (lambda (proc string)
+                                                  (simple-mpc-maybe-refresh-playlist t))))))
       (simple-mpc-mode) ; start major mode
       (switch-to-buffer buf))))
 

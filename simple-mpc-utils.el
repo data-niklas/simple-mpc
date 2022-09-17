@@ -46,6 +46,14 @@ passed to the mpc program."
       (setq mpc-args (append (split-string simple-mpc-arguments " ") mpc-args)))
   (apply 'call-process "mpc" nil destination nil mpc-args))
 
+(defun simple-mpc-listen-events (name events on-event-cb)
+  "Listen for all EVENTS and call on-event-cb for each event occurence. Return a process called simple-mpc-NAME."
+  (let* ((process (eval
+                   (start-process (concat "simple-mpc-" name))
+                   events)))
+    (set-process-filter process on-event-cb)
+    process))
+
 (defun simple-mpc-call-mpc-strings (mpc-args)
   "Wrapper around `simple-mpc-call-mpc-string'.
 
